@@ -6,20 +6,6 @@ def split_prns(item: str) -> list:
             range(3, len(item[2:]) + 3, 3)]
 
 
-def check_prns_in_string(dummy_string):
-    
-    gnss_constellations = {
-        "G", "R", "E", "S", "C"
-        }
-    
-    if any(constellation in dummy_string for 
-           constellation in gnss_constellations):
-            
-        return True
-    else:
-        return False
-    
-
 
 def get_prns_section(prns_list, num_sats, i):
 

@@ -1,6 +1,4 @@
-import xrinex as rx
-
-
+import xrinex as rx 
 
 def convert_to_datetime(dic):
     '''
@@ -11,14 +9,29 @@ def convert_to_datetime(dic):
         dic[key] = rx.get_datetime(dic[key])
     return dic
 
-class HeaderRINEX3:
+def extend_obs(obs_types):
+    extended_list = []
+    for f in obs_types:
+        extended_list.extend(f[10:].split())
+        
+    return extended_list
+
+def get_obs_list(obs_types):
+    num_of_obs = int(obs_types[0][:10].strip())
+    obs_list = extend_obs(obs_types)
     
+    if len(obs_list) != num_of_obs:
+        raise ValueError('Dont match')
+        
+    return num_of_obs, obs_list
+
+class headerRINEX2:
     
     
     def __init__(self, infile):
+                
+        lines = open(infile, 'r').readlines()
         
-    
-        lines = open(infile, "r").readlines()
         
         obs_types = []
         time_of_obs = {}
@@ -32,7 +45,7 @@ class HeaderRINEX3:
             if 'END OF HEADER' in ln:
                 break
             else:        
-                if 'OBS TYPES' in ln:
+                if 'TYPES OF OBSERV' in ln:
                     obs_types.append(infos)
                     
                 elif 'TIME' in ln:
@@ -50,25 +63,12 @@ class HeaderRINEX3:
                 elif 'MARKER NAME' in ln:
                     geral_infos['code'] = infos.strip()
                     
-        
+                    
+        self.num_of_obs, self.obs_names = get_obs_list(obs_types)
         
         geral_infos.update(convert_to_datetime(time_of_obs))
+        self.attrs = geral_infos
+        self.lines = lines
         
-        self.obs_types = rx.join_obs_types(obs_types)
-        self.header = geral_infos
+        return None 
         
-
-
-def main():
-    infile = 'G:\\Meu Drive\\Python\\data-analysis\\database\\GNSS\\'
-    
-    filename = 'AREG00PER_R_20190860000_01D_30S_MO.rnx'
-    # filename = 'GLPS00ECU_R_20220010000_01D_30S_MO.rnx'
-    
-    
-    path = infile + filename
-    he = HeaderRINEX3(path).header 
-    
-    print(he)
-    
-# main()

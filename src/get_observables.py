@@ -37,6 +37,32 @@ def spurius(obs_record):
         return '', '', ''
     else:
         return ob[0][:-2], ob[0][-2], ob[0][-1]
+    
+def get_datetime(string_time):
+    import datetime as dt 
+    if string_time is None:
+        raise ValueError("Tempo vazio (None)")
+    if isinstance(string_time, str):
+        if not string_time.strip():
+            raise ValueError("Tempo vazio (string em branco)")
+        t = string_time.split()
+    else:
+        t = list(string_time)
+    if len(t) < 6:
+        raise ValueError(f"Formato de tempo inválido: {string_time!r}")
+
+    year = int(t[0])
+    if year < 100:
+        year = 2000 + year if year < 80 else 1900 + year
+
+    month = int(t[1]); day = int(t[2])
+    hour = int(t[3]); minute = int(t[4])
+
+    sec_float = float(t[5])
+    second = int(sec_float)
+ 
+    return dt.datetime(year, month, day, hour, minute, second)
+
 
 def get_observables_rinex21(ds):
 
