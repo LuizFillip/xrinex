@@ -3,4 +3,5 @@
 /src/__pycache__/*
 /src/rinex3/__pycache__/*
 /src/rinex2/__pycache__/*
+/src/rinex2_old/__pycache__/*
 
